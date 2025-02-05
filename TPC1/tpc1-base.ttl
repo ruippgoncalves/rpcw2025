@@ -1,0 +1,201 @@
+@prefix : <http://github.com/ruippgoncalves/rpcw2025/TPC1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://github.com/ruippgoncalves/rpcw2025/TPC1/> .
+
+<http://github.com/ruippgoncalves/rpcw2025/TPC1> rdf:type owl:Ontology .
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#exameDe
+:exameDe rdf:type owl:ObjectProperty ;
+         rdfs:domain :Exame ;
+         rdfs:range :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#noClube
+:noClube rdf:type owl:ObjectProperty ;
+         rdfs:domain :Pratica ;
+         rdfs:range :Clube .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#praticaModalidade
+:praticaModalidade rdf:type owl:ObjectProperty ;
+                   rdfs:domain :Pratica ;
+                   rdfs:range :Modalidade .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/mora
+:mora rdf:type owl:ObjectProperty ;
+      rdfs:domain :Pessoa ;
+      rdfs:range :Localidade .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/éPraticada
+:éPraticada rdf:type owl:ObjectProperty ;
+            rdfs:domain :Pratica ;
+            rdfs:range :Pessoa .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#data
+:data rdf:type owl:DatatypeProperty ;
+      rdfs:domain :Exame ;
+      rdfs:range xsd:date .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#resultado
+:resultado rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Exame ;
+           rdfs:range xsd:boolean .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/email
+:email rdf:type owl:DatatypeProperty ;
+       rdfs:domain :Pessoa ;
+       rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/federado
+:federado rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Pratica ;
+          rdfs:range xsd:boolean .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/generoMasculino
+:generoMasculino rdf:type owl:DatatypeProperty ;
+                 rdfs:domain :Pessoa ;
+                 rdfs:range xsd:boolean .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/id
+:id rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Pessoa ;
+    rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/idade
+:idade rdf:type owl:DatatypeProperty ;
+       rdfs:domain :Pessoa ;
+       rdfs:range xsd:integer .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/nome
+:nome rdf:type owl:DatatypeProperty ;
+      rdfs:domain [ rdf:type owl:Class ;
+                    owl:unionOf ( :Clube
+                                  :Localidade
+                                  :Modalidade
+                                )
+                  ] ;
+      rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/primeiroNome
+:primeiroNome rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Pessoa ;
+              rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/ultimoNome
+:ultimoNome rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Pessoa ;
+            rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Clube
+:Clube rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Exame
+:Exame rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Localidade
+:Localidade rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Modalidade
+:Modalidade rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Pessoa
+:Pessoa rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Pratica
+:Pratica rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#EmilyTerrellExame
+:EmilyTerrellExame rdf:type owl:NamedIndividual ,
+                            :Exame ;
+                   :exameDe :EmilyTerrell ;
+                   :data "2020-07-27"^^xsd:date ;
+                   :resultado "true"^^xsd:boolean .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1#EmilyTerrellPratica
+:EmilyTerrellPratica rdf:type owl:NamedIndividual ,
+                              :Pratica ;
+                     :noClube :GDGoma ;
+                     :praticaModalidade :Futebol ;
+                     :éPraticada :EmilyTerrell ;
+                     :federado "false"^^xsd:boolean .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Clay
+:Clay rdf:type owl:NamedIndividual ,
+               :Localidade ;
+      :nome "Clay" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/EmilyTerrell
+:EmilyTerrell rdf:type owl:NamedIndividual ,
+                       :Pessoa ;
+              :mora :Clay ;
+              :email "emily.terrell@gdgoma.org" ;
+              :generoMasculino "false"^^xsd:boolean ;
+              :id "60b3ee0ee00725274024d5a2" ;
+              :idade 28 ;
+              :primeiroNome "Emily" ;
+              :ultimoNome "Terrell" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/Futebol
+:Futebol rdf:type owl:NamedIndividual ,
+                  :Modalidade ;
+         :nome "Futebol" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/TPC1/GDGoma
+:GDGoma rdf:type owl:NamedIndividual ,
+                 :Clube ;
+        :nome "GDGoma" .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
