@@ -85,7 +85,8 @@ select ?nome ?nasc ?cognome ?dinastia where {
     ?monarca :nascimento ?nasc .
     ?monarca :cognomes ?cognome .
     ?reinado :temMonarca ?monarca .
-    ?reinado :dinastia ?dinastia .
+    ?reinado :dinastia ?din .
+    ?din :nome ?dinastia .
 } limit 100
 ```
 
@@ -96,10 +97,15 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX : <http://www.semanticweb.org/andre/ontologies/2015/6/historia#>
 
-select ?dinastia (count (distinct ?monarca) as ?dist) where {
+select ?dinastia (count (?monarca) as ?dist) where {
     ?reinado :dinastia ?dinastia .
     ?reinado :temMonarca ?monarca .
     ?monarca rdf:type :Rei .
+} group by ?dinastia order by ?dinastia limit 100
+
+select ?dinastia (count (?monarca) as ?dist) where {
+    ?monarca a :Rei ; # ; is the first in triple and , is by the first two
+             :temReinado/:dinastia/:nome ?dinastia .
 } group by ?dinastia order by ?dinastia limit 100
 ```
 
@@ -141,7 +147,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX : <http://www.semanticweb.org/andre/ontologies/2015/6/historia#>
 
-select ?nome ?nascimento (count(distinct ?mandato) as ?mandatos) where {
+select ?nome ?nascimento (count(?mandato) as ?mandatos) where {
     ?pres rdf:type :Presidente .
     ?pres :nome ?nome .
     ?pres :nascimento ?nascimento .
@@ -156,7 +162,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX : <http://www.semanticweb.org/andre/ontologies/2015/6/historia#>
 
-select (count(distinct ?mandato) as ?mandatos) where {
+select (count(?mandato) as ?mandatos) where {
     ?pres rdf:type :Presidente .
     ?pres :nome "Sidónio Bernardino Cardoso da Silva Pais" .
     ?pres :mandato ?mandato .
@@ -183,7 +189,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX : <http://www.semanticweb.org/andre/ontologies/2015/6/historia#>
 
-select ?nome (count (distinct ?militante) as ?militantes) where {
+select ?nome (count (?militante) as ?militantes) where {
     ?par rdf:type :Partido .
     ?par :nome ?nome .
     ?par :temMilitante ?militante .
@@ -197,9 +203,9 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX : <http://www.semanticweb.org/andre/ontologies/2015/6/historia#>
 
-select ?nome (count (distinct ?militante) as ?militantes) where {
+select ?nome (count (?militante) as ?militantes) where {
     ?par rdf:type :Partido .
     ?par :nome ?nome .
     ?par :temMilitante ?militante .
-} group by ?par ?nome order by desc(?militantes) limit 1
+} group by ?par ?nome order by desc(?militantes) limit 2
 ```
