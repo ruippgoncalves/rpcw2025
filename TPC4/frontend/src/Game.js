@@ -1,6 +1,91 @@
 import React, {useEffect, useState} from "react";
 import {useSocket} from "./SocketContext.js";
 
+function Leaderboard(props) {
+    return (<div>
+        <p>Leaderboard</p>
+        <ul>
+            {Object.entries(props.leaderBoard).map(([player, info]) => (
+                <li key={player}>{info.username} - {info.score}</li>))}
+        </ul>
+        <button onClick={props.onContinue}>Continue</button>
+    </div>);
+}
+
+function UserList(props) {
+    return (<div>
+        <p>Players {Object.keys(props.players).length}</p>
+        <ul>
+            {Object.entries(props.players).map(([player, info]) => (<li key={player}>{info.username}</li>))}
+        </ul>
+        <button onClick={props.onStart}>Start
+        </button>
+    </div>);
+}
+
+function Question(props) {
+    if ('options2' in props.question) {
+        const [selectedAnswers, setSelectedAnswers] = useState(new Array(props.question.options.length).fill(null));
+
+        return (<div>
+            <p>Question {props.questionCount}</p>
+            <p>{props.question.question}</p>
+            <div>
+                {props.question.options.map((option, index) => (
+                    <div key={option}>
+                        <label>{option}</label>
+                        <select
+                            onChange={(e) => {
+                                const selectedIndex = parseInt(e.target.value);
+                                setSelectedAnswers((prevAnswers) => {
+                                    const newAnswers = [...prevAnswers];
+                                    newAnswers[index] = selectedIndex;
+                                    return newAnswers;
+                                });
+                            }}
+                            disabled={props.answered}
+                            value={selectedAnswers[index] !== null ? selectedAnswers[index] : ""}
+                        >
+                            <option value="">Select</option>
+                            {props.question.options2.map((option2, idx) => (
+                                <option key={idx} value={idx}>
+                                    {option2}
+                                </option>
+                            ))}
+                        </select>
+                        {props.answered && props.question.answer.split('/')[index] === (selectedAnswers[index] + 1).toString() ? (
+                            <span> - Right One</span>
+                        ) : null}
+                    </div>
+                ))}
+            </div>
+            <button
+                onClick={() => {
+                    const answerString = selectedAnswers.join('/');
+                    props.onAnswer(answerString);
+                }}
+                disabled={props.answered}
+            >
+                Submit Answer
+            </button>
+        </div>);
+    }
+
+    return (<div>
+        <p>Question {props.questionCount}</p>
+        <p>{props.question.question}</p>
+        <div>
+            {props.question.options.map(option => (
+                <button disabled={props.answered} key={option}
+                        onClick={() => {
+                            props.onAnswer(option)
+                        }}>{option}{props.answered && option === props.question.answer ? (<> -
+                    Right One</>) : (<></>)}</button>
+            ))}
+        </div>
+    </div>);
+}
+
 function Game() {
     const [players, setPlayers] = useState({});
     const [question, setQuestion] = useState(null);
@@ -43,41 +128,21 @@ function Game() {
     }, [socket]);
 
     if (leaderBoard !== null) {
-        return (<div>
-            <p>Leaderboard</p>
-            <ul>
-                {Object.entries(leaderBoard).map(([player, info]) => (<li key={player}>{info.username} - {info.score}</li>))}
-            </ul>
-            <button onClick={() => {
-                setLeaderBoard(null);
-            }}>Continue</button>
-        </div>);
+        return (<Leaderboard leaderBoard={leaderBoard} onContinue={() => {
+            setLeaderBoard(null);
+        }}/>);
     }
 
     if (question !== null) {
-        return (<div>
-            <p>Question {questionCount}</p>
-            <p>{question.question}</p>
-            <div>
-                {question.options.map(option => (
-                    <button disabled={answered} key={option} onClick={() => {
-                        socket.emit("answer", option);
-                        setAnswered(true);
-                    }}>{option}{answered && option === question.answer ? (<> - Right One</>) : (<></>)}</button>
-                ))}
-            </div>
-        </div>);
+        return (<Question questionCount={questionCount} question={question} answered={answered} onAnswer={(a) => {
+            socket.emit("answer", a);
+            setAnswered(true);
+        }}/>);
     }
 
-    return (<div>
-        <p>Players {Object.keys(players).length}</p>
-        <ul>
-            {Object.entries(players).map(([player, info]) => (<li key={player}>{info.username}</li>))}
-        </ul>
-        <button onClick={() => {
-            socket.emit("start_game");
-        }}>Start</button>
-    </div>)
+    return (<UserList players={players} onStart={() => {
+        socket.emit("start_game");
+    }}/>);
 }
 
 export default Game;

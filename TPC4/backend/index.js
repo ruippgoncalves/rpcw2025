@@ -6,23 +6,20 @@ const io = new Server({
     }
 });
 
-const questions = {
-    1: {question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4"},
-    2: {question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], answer: "Paris"},
-    3: {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Jupiter", "Saturn"],
-        answer: "Mars"
-    },
-    4: {question: "What is the chemical symbol for water?", options: ["O2", "CO2", "H2O", "H2"], answer: "H2O"},
-    5: {question: "How many continents are there on Earth?", options: ["5", "6", "7", "8"], answer: "5"}
-};
-
+let questions = null;
 let gameActive = false;
 let players = {};
 let currentQuestion = 0;
 let answeredPlayers = 0;
 let questionTimer = null;
+
+async function generateGame() {
+    questions = {
+        1: {question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4"},
+        2: {question: "Is Paris the capital of France?", options: ["Yes", "No"], answer: "Yes"},
+        3: {question: "Connect the chemical symbol to its name?", options: ["O2", "CO2", "H2O", "H2"], options2: ["Hydrogen", "Carbon Dioxide", "Oxygen", "Water"], answer: "2/1/3/0"},
+    };
+}
 
 function nextQuestion() {
     answeredPlayers = 0;
@@ -52,9 +49,12 @@ io.on("connection", (socket) => {
     console.log(`Player ${socket.id} (${players[socket.id].username}) connected`);
     io.emit("players", players);
 
-    socket.on("start_game", () => {
-        gameActive = true;
-        nextQuestion();
+    socket.on("start_game", async () => {
+        if (!gameActive) {
+            gameActive = true;
+            await generateGame();
+            nextQuestion();
+        }
     });
 
     socket.on("answer", (answer) => {
