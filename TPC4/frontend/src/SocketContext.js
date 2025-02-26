@@ -25,10 +25,6 @@ export const SocketProvider = ({children}) => {
             setSocket(null);
             newSocket.disconnect();
         });
-        socket.on('connect_error', function(){
-            setSocket(null);
-            newSocket.disconnect();
-        });
     };
 
     return (
