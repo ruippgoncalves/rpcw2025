@@ -1,10 +1,15 @@
 import {Server} from 'socket.io';
+import {generateGame} from "./generateGame.js";
 
 const io = new Server({
     cors: {
         origin: '*'
     }
 });
+
+const questionsPerGame = 10;
+const endpoint = 'http://localhost:7200/repositories/historia';
+const prefix = 'http://www.semanticweb.org/andre/ontologies/2015/6/historia#'
 
 let questions = null;
 let gameActive = false;
@@ -13,29 +18,25 @@ let currentQuestion = 0;
 let answeredPlayers = 0;
 let questionTimer = null;
 
-async function generateGame() {
-    questions = {
-        1: {question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4"},
-        2: {question: "Is Paris the capital of France?", options: ["Yes", "No"], answer: "Yes"},
-        3: {question: "Connect the chemical symbol to its name?", options: ["O2", "CO2", "H2O", "H2"], options2: ["Hydrogen", "Carbon Dioxide", "Oxygen", "Water"], answer: "2/1/3/0"},
-    };
-}
-
 function nextQuestion() {
-    answeredPlayers = 0;
+    io.emit("end_question");
 
-    if (currentQuestion < Object.keys(questions).length) {
-        currentQuestion++;
-        io.emit("question", questions[currentQuestion]);
-        questionTimer = setTimeout(() => {
-            nextQuestion();
-        }, 30000);
-    } else {
-        gameActive = false;
-        io.emit("game_over", players);
-        Object.keys(players).forEach(key => players[key].score = 0);
-        currentQuestion = 0;
-    }
+    setTimeout(() => {
+        answeredPlayers = 0;
+
+        if (currentQuestion < Object.keys(questions).length) {
+            currentQuestion++;
+            io.emit("question", questions[currentQuestion]);
+            questionTimer = setTimeout(() => {
+                nextQuestion();
+            }, 30000);
+        } else {
+            gameActive = false;
+            io.emit("game_over", players);
+            Object.keys(players).forEach(key => players[key].score = 0);
+            currentQuestion = 0;
+        }
+    }, 5000);
 }
 
 io.on("connection", (socket) => {
@@ -52,7 +53,11 @@ io.on("connection", (socket) => {
     socket.on("start_game", async () => {
         if (!gameActive) {
             gameActive = true;
-            await generateGame();
+            const questionsData = await generateGame(questionsPerGame, endpoint, prefix);
+            questions = questionsData.reduce((acc, curr, index) => {
+                acc[index + 1] = curr;
+                return acc;
+            }, {});
             nextQuestion();
         }
     });

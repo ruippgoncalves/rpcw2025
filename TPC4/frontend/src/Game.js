@@ -32,7 +32,7 @@ function Question(props) {
             <p>{props.question.question}</p>
             <div>
                 {props.question.options.map((option, index) => (
-                    <div key={option}>
+                    <div key={`${props.questionCount}-${option}`}>
                         <label>{option}</label>
                         <select
                             onChange={(e) => {
@@ -46,16 +46,16 @@ function Question(props) {
                             disabled={props.answered}
                             value={selectedAnswers[index] !== null ? selectedAnswers[index] : ""}
                         >
-                            <option value="">Select</option>
-                            {props.question.options2.map((option2, idx) => (
-                                <option key={idx} value={idx}>
-                                    {option2}
-                                </option>
-                            ))}
+                            {props.answered ?
+                                (<option
+                                    key={`${props.questionCount}-right`}>{props.question.options2[Number(props.question.answer.split('/')[index])]} -
+                                    Right One</option>) :
+                                props.question.options2.map((option2, idx) => (
+                                    <option key={`${props.questionCount}-${idx}`} value={idx}>
+                                        {option2}
+                                    </option>
+                                ))}
                         </select>
-                        {props.answered && props.question.answer.split('/')[index] === (selectedAnswers[index] + 1).toString() ? (
-                            <span> - Right One</span>
-                        ) : null}
                     </div>
                 ))}
             </div>
@@ -76,7 +76,7 @@ function Question(props) {
         <p>{props.question.question}</p>
         <div>
             {props.question.options.map(option => (
-                <button disabled={props.answered} key={option}
+                <button disabled={props.answered} key={`${props.questionCount}-${option}`}
                         onClick={() => {
                             props.onAnswer(option)
                         }}>{option}{props.answered && option === props.question.answer ? (<> -
@@ -100,6 +100,12 @@ function Game() {
             setPlayers(p);
         };
 
+        const handleEndQuestion = () => {
+            console.log("end_question");
+
+            setAnswered(true);
+        };
+
         const handleGameOver = (lb) => {
             console.log("game_over", lb);
             setQuestion(null);
@@ -117,11 +123,13 @@ function Game() {
         };
 
         socket.on("players", handlePlayers);
+        socket.on("end_question", handleEndQuestion);
         socket.on("game_over", handleGameOver);
         socket.on("question", handleQuestion);
 
         return () => {
             socket.off("players", handlePlayers);
+            socket.off("end_question", handleEndQuestion);
             socket.off("game_over", handleGameOver);
             socket.off("question", handleQuestion);
         };
@@ -134,10 +142,14 @@ function Game() {
     }
 
     if (question !== null) {
-        return (<Question questionCount={questionCount} question={question} answered={answered} onAnswer={(a) => {
+        return (<Question key={questionCount} questionCount={questionCount} question={question} answered={answered} onAnswer={(a) => {
             socket.emit("answer", a);
             setAnswered(true);
         }}/>);
+    }
+
+    if (answered) {
+        return (<div>Starting...</div>)
     }
 
     return (<UserList players={players} onStart={() => {
