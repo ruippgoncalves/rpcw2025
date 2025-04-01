@@ -1,0 +1,348 @@
+@prefix : <http://github.com/ruippgoncalves/rpcw2025/historia/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://github.com/ruippgoncalves/rpcw2025/historia/> .
+
+<http://github.com/ruippgoncalves/rpcw2025/historia> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#ajuda
+:ajuda rdf:type owl:ObjectProperty ;
+       rdfs:domain :Pessoa ;
+       rdfs:range :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#aoLado
+:aoLado rdf:type owl:ObjectProperty ;
+        rdfs:domain :Residencia ;
+        rdfs:range :Residencia .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#ascendente
+:ascendente rdf:type owl:ObjectProperty ;
+            owl:inverseOf :descendente ;
+            rdfs:domain :Pessoa ;
+            rdfs:range :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#descendente
+:descendente rdf:type owl:ObjectProperty .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#eCasado
+:eCasado rdf:type owl:ObjectProperty ,
+                  owl:SymmetricProperty ;
+         rdfs:domain :Pessoa ;
+         rdfs:range :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#eMaior
+:eMaior rdf:type owl:ObjectProperty ;
+        owl:inverseOf :eMenor ;
+        rdfs:domain :Residencia ;
+        rdfs:range :Residencia .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#eMenor
+:eMenor rdf:type owl:ObjectProperty .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#formaPagamento
+:formaPagamento rdf:type owl:ObjectProperty ;
+                rdfs:domain :Trabalhador ;
+                rdfs:range :Rentabilidade .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#localizada
+:localizada rdf:type owl:ObjectProperty ;
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( :Residencia
+                                        :Venda
+                                      )
+                        ] ;
+            rdfs:range :Localizacao .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#ocupacao
+:ocupacao rdf:type owl:ObjectProperty ;
+          rdfs:domain :Pessoa ;
+          rdfs:range :Ocupacao .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#produto
+:produto rdf:type owl:ObjectProperty ;
+         rdfs:domain :Venda ;
+         rdfs:range :Produzivel .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#produz
+:produz rdf:type owl:ObjectProperty ;
+        rdfs:domain :Ocupacao ;
+        rdfs:range :Produzivel .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#reside
+:reside rdf:type owl:ObjectProperty ;
+        rdfs:domain :Pessoa ;
+        rdfs:range :Residencia .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#temporario
+:temporario rdf:type owl:ObjectProperty ;
+            rdfs:domain :Trabalhador ;
+            rdfs:range :Estacao .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#trabalhaPara
+:trabalhaPara rdf:type owl:ObjectProperty ;
+              rdfs:domain :TrabalhoPorContaDeOutrem ;
+              rdfs:range :Trabalhador .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#trocaBem
+:trocaBem rdf:type owl:ObjectProperty ;
+          rdfs:domain :Troca ;
+          rdfs:range :Bem .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#trocaEntre
+:trocaEntre rdf:type owl:ObjectProperty ;
+            rdfs:domain :Troca ;
+            rdfs:range :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#vendidoPor
+:vendidoPor rdf:type owl:ObjectProperty ;
+            rdfs:domain :Venda ;
+            rdfs:range :Trabalhador .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#vizinho
+:vizinho rdf:type owl:ObjectProperty ,
+                  owl:SymmetricProperty ;
+         rdfs:domain :Pessoa ;
+         rdfs:range :Pessoa .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#data
+:data rdf:type owl:DatatypeProperty ;
+      rdfs:domain :Venda ;
+      rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#extras
+:extras rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Trabalhador ;
+        rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#funcao
+:funcao rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Bem ;
+        rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#nome
+:nome rdf:type owl:DatatypeProperty ;
+      rdfs:domain [ rdf:type owl:Class ;
+                    owl:unionOf ( :Bem
+                                  :Estacao
+                                  :Localizacao
+                                  :Ocupacao
+                                  :Pessoa
+                                  :Venda
+                                )
+                  ] ;
+      rdfs:range xsd:string .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#tipo
+:tipo rdf:type owl:DatatypeProperty ;
+      rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Animal
+:Animal rdf:type owl:Class ;
+        rdfs:subClassOf :Produzivel .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Bem
+:Bem rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Estacao
+:Estacao rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Fruta
+:Fruta rdf:type owl:Class ;
+       rdfs:subClassOf :Produzivel .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Localizacao
+:Localizacao rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Ocupacao
+:Ocupacao rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Pessoa
+:Pessoa rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Produzivel
+:Produzivel rdf:type owl:Class ;
+            rdfs:subClassOf :Bem .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Rentabilidade
+:Rentabilidade rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Residencia
+:Residencia rdf:type owl:Class ;
+            rdfs:subClassOf :Bem .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Trabalhador
+:Trabalhador rdf:type owl:Class ;
+             owl:equivalentClass [ rdf:type owl:Restriction ;
+                                   owl:onProperty :formaPagamento ;
+                                   owl:someValuesFrom :Pessoa
+                                 ] ;
+             rdfs:subClassOf :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#TrabalhoPorContaDeOutrem
+:TrabalhoPorContaDeOutrem rdf:type owl:Class ;
+                          rdfs:subClassOf :Rentabilidade .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Troca
+:Troca rdf:type owl:Class .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Vegetal
+:Vegetal rdf:type owl:Class ;
+         rdfs:subClassOf :Produzivel .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Venda
+:Venda rdf:type owl:Class ;
+       rdfs:subClassOf :Rentabilidade .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Alfaces
+:Alfaces rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Ana
+:Ana rdf:type owl:NamedIndividual ,
+              :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Bananas
+:Bananas rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#CaoRex
+:CaoRex rdf:type owl:NamedIndividual ,
+                 :Animal ;
+        :nome "Cao Rex" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Carlos
+:Carlos rdf:type owl:NamedIndividual ,
+                 :Trabalhador .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Cenouras
+:Cenouras rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#EstacaoColheita
+:EstacaoColheita rdf:type owl:NamedIndividual ,
+                          :Estacao ;
+                 :nome "Estacao Colheita" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Galinhas
+:Galinhas rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Joao
+:Joao rdf:type owl:NamedIndividual ,
+               :Trabalhador .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Laranajas
+:Laranajas rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Macas
+:Macas rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Maria
+:Maria rdf:type owl:NamedIndividual ,
+                :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Pedro
+:Pedro rdf:type owl:NamedIndividual ,
+                :Pessoa .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Porcos
+:Porcos rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Tomates
+:Tomates rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#TrabTemp
+:TrabTemp rdf:type owl:NamedIndividual ,
+                   :Trabalhador .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#TrabalhadoresJose
+:TrabalhadoresJose rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Trator
+:Trator rdf:type owl:NamedIndividual ,
+                 :Bem ;
+        :nome "Trator" .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#Vacas
+:Vacas rdf:type owl:NamedIndividual .
+
+
+###  http://github.com/ruippgoncalves/rpcw2025/historia#VilaSJose
+:VilaSJose rdf:type owl:NamedIndividual ,
+                    :Localizacao ;
+           :nome "Vila de São José" .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
